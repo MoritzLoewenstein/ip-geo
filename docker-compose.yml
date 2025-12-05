@@ -2,8 +2,6 @@ services:
   app:
     build: .
     image: ghcr.io/moritzloewenstein/ip-geo:latest
-    ports:
-      - 3000:3000
     volumes:
       - ./data:/app/data
     depends_on:
