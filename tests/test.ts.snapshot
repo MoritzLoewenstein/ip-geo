@@ -1,0 +1,3 @@
+exports[`response snapshot 1`] = `
+"ip: ::1\\nip_version: IPv6\\n"
+`;

@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    image: ghcr.io/moritzloewenstein/ip-geo:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      geoipupdate:
+        condition: service_started
+    restart: unless-stopped
+  geoipupdate:
+    image: ghcr.io/maxmind/geoipupdate
+    entrypoint: /bin/sh -c 'export GEOIPUPDATE_ACCOUNT_ID=$$(cat /run/secrets/geoipupdate_account_id) && export GEOIPUPDATE_LICENSE_KEY=$$(cat /run/secrets/geoipupdate_license_key) && exec /usr/bin/entry.sh'
+    environment:
+      - GEOIPUPDATE_EDITION_IDS=GeoLite2-ASN GeoLite2-City
+      - GEOIPUPDATE_FREQUENCY=24
+    secrets:
+      - geoipupdate_account_id
+      - geoipupdate_license_key
+    volumes:
+      - ./data:/usr/share/GeoIP
+
+secrets:
+  geoipupdate_account_id:
+    file: ./secrets/geoipupdate_account_id
+  geoipupdate_license_key:
+    file: ./secrets/geoipupdate_license_key

@@ -1,0 +1,10 @@
+node_modules
+.git
+.github
+biome.json
+Dockerfile
+docker-compose.yml
+ReadMe.md
+
+data
+secrets
