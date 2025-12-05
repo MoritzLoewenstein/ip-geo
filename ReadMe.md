@@ -1,5 +1,3 @@
-# geo-ip
-
 A simple http-server which displays information about the current connection:
 
 ![ip and ip version display](./docs/image.png)
