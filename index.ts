@@ -24,6 +24,12 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 	const ip = req.socket.remoteAddress as string;
 	let resp = `ip: ${ip}\n`;
 	resp += `ip_version: ${req.socket.remoteFamily}\n`;
+
+	const xForwardedFor = req.header?.["x-forwarded-for"];
+	if (xForwardedFor) {
+		resp += `x-forwarded-for: ${xForwardedFor}`;
+	}
+
 	const ipParsed = ipaddr.parse(ip);
 	if (ipParsed.kind() === "ipv6" && (ipParsed as IPv6).isIPv4MappedAddress()) {
 		const embeddedIPv4 = (ipParsed as IPv6).toIPv4Address();
