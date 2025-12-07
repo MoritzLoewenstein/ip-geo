@@ -25,7 +25,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 	let resp = `ip: ${ip}\n`;
 	resp += `ip_version: ${req.socket.remoteFamily}\n`;
 
-	const xForwardedFor = req.header?.["x-forwarded-for"];
+	const xForwardedFor = req.headers?.["x-forwarded-for"];
 	if (xForwardedFor) {
 		resp += `x-forwarded-for: ${xForwardedFor}`;
 	}
