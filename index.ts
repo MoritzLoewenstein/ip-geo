@@ -35,7 +35,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 
 	const ipData = getIpData(ip);
 	if (ipData.city || ipData.asn) {
-		resp += `\n# This product includes GeoLite2 Data created by MaxMind, available from https://www.maxmind.com.\n`;
+		resp += `\n# This product includes GeoLite2 Data created by MaxMind,\n# available from https://www.maxmind.com.\n`;
 	}
 	if (ipData.city) {
 		if (ipData.city.city?.names?.en) {
