@@ -57,7 +57,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 		}
 	}
 
-	res.writeHead(200, { "content-type": "text/plain" });
+	res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
 	res.write(resp);
 	res.end();
 });
