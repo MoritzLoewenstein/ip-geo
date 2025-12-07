@@ -23,11 +23,12 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 
 	const ip = (req.headers?.["x-forwarded-for"] ||
 		req.socket.remoteAddress) as string;
-	let resp = `ip: ${ip}\n`;
-	resp += `ip_version: ${req.socket.remoteFamily}\n`;
-
 	const ipParsed = ipaddr.parse(ip);
-	if (ipParsed.kind() === "ipv6" && (ipParsed as IPv6).isIPv4MappedAddress()) {
+	const ipKind = ipParsed.kind();
+	let resp = `ip: ${ip}\n`;
+	resp += `ip_version: ${ipKind}\n`;
+
+	if (ipKind === "ipv6" && (ipParsed as IPv6).isIPv4MappedAddress()) {
 		const embeddedIPv4 = (ipParsed as IPv6).toIPv4Address();
 		resp += `ipv6_mapped_ipv4: ${embeddedIPv4}\n`;
 	}
