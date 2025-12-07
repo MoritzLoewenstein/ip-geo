@@ -3,14 +3,26 @@ import {
 	type IncomingMessage,
 	type ServerResponse,
 } from "node:http";
-import geoip2 from "@maxmind/geoip2-node";
 import ipaddr, { type IPv6 } from "ipaddr.js";
+import maxmind, { type AsnResponse, type CityResponse } from "maxmind";
 
-const geoIpReader = await geoip2.Reader.open("./data/GeoLite2-City.mmdb", {
+const cityReader = await maxmind.open<CityResponse>(
+	"./data/GeoLite2-City.mmdb",
+	{
+		watchForUpdates: true,
+		watchForUpdatesNonPersistent: true,
+		watchForUpdatesHook() {
+			console.info("Updated GeoLite2-City.mmdb");
+		},
+	},
+);
+
+const asnReader = await maxmind.open<AsnResponse>("./data/GeoLite2-ASN.mmdb", {
 	watchForUpdates: true,
-});
-const asnIpReader = await geoip2.Reader.open("./data/GeoLite2-ASN.mmdb", {
-	watchForUpdates: true,
+	watchForUpdatesNonPersistent: true,
+	watchForUpdatesHook() {
+		console.info("Updated GeoLite2-ASN.mmdb");
+	},
 });
 
 const PORT = process.env.PORT ?? 3000;
@@ -52,11 +64,11 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 		}
 	}
 	if (ipData.asn) {
-		if (ipData.asn.autonomousSystemNumber) {
-			resp += `asn: ${ipData.asn.autonomousSystemNumber}\n`;
+		if (ipData.asn.autonomous_system_number) {
+			resp += `asn: ${ipData.asn.autonomous_system_number}\n`;
 		}
-		if (ipData.asn.autonomousSystemOrganization) {
-			resp += `asn_org: ${ipData.asn.autonomousSystemOrganization}\n`;
+		if (ipData.asn.autonomous_system_organization) {
+			resp += `asn_org: ${ipData.asn.autonomous_system_organization}\n`;
 		}
 	}
 
@@ -68,12 +80,12 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 function getIpData(ip: string) {
 	let city = null;
 	try {
-		city = geoIpReader.city(ip);
+		city = cityReader.get(ip);
 	} catch {}
 
 	let asn = null;
 	try {
-		asn = asnIpReader.asn(ip);
+		asn = asnReader.get(ip);
 	} catch {}
 
 	return {

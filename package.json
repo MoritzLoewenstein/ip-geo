@@ -22,7 +22,7 @@
 		"@types/node": "^24.10.1"
 	},
 	"dependencies": {
-		"@maxmind/geoip2-node": "^6.3.4",
-		"ipaddr.js": "^2.3.0"
+		"ipaddr.js": "^2.3.0",
+		"maxmind": "^5.0.1"
 	}
 }
