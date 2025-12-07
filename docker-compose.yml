@@ -20,7 +20,16 @@ services:
     volumes:
       - ./data:/usr/share/GeoIP
     healthcheck:
-      test: ["CMD", "test", "-f", "/usr/share/GeoIP/GeoLite2-City.mmdb", "-a", "-f", "/usr/share/GeoIP/GeoLite2-ASN.mmdb"]
+      test:
+        [
+          "CMD",
+          "test",
+          "-f",
+          "/usr/share/GeoIP/GeoLite2-City.mmdb",
+          "-a",
+          "-f",
+          "/usr/share/GeoIP/GeoLite2-ASN.mmdb",
+        ]
       interval: 5s
       timeout: 1s
 
