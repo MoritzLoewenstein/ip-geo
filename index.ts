@@ -34,7 +34,6 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 	}
 
 	const ip = getIp(req.headers, req.socket);
-	console.log("ip result", ip);
 	const ipParsed = ipaddr.parse(ip);
 	const ipKind = ipParsed.kind();
 	let resp = `ip: ${ip}\n`;
@@ -82,7 +81,6 @@ function getIp(
 	socket: IncomingMessage["socket"],
 ): string {
 	const ipSource = (process.env.IP_SOURCE ?? "socket").toLowerCase();
-	console.log(ipSource, headers);
 	const socketIp = socket.remoteAddress as string;
 
 	switch (ipSource) {
