@@ -33,6 +33,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 		return;
 	}
 
+	console.log(req.headers);
 	const ip = (req.headers?.["x-forwarded-for"] ||
 		req.socket.remoteAddress) as string;
 	const ipParsed = ipaddr.parse(ip);
