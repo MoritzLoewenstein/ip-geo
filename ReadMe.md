@@ -10,10 +10,7 @@ Enter your MaxMind account id and license key in the secrets files (remove `.exa
 
 ## Limitations
 
-It is assumed that this will be used behind a reverse proxy which provides the `x-forwarded-for` header,
-which it blindly trusts. If it is not used behind a reverse proxy, a user could request the data
-for another ip (not their own) by requesting with the `x-forwarded-for` header. If the header is not
-set, the ip of the connecting socket will be used.
+The tool blindly trusts whatever IP source is configured via the `IP_SOURCE` environment variable (cloudflare, forwarded_for, real_ip, or socket). Ensure your configuration matches your deployment architecture to prevent users from spoofing IPs.
 
 ## Functionality
 

@@ -4,6 +4,9 @@ services:
     image: ghcr.io/moritzloewenstein/ip-geo:latest
     volumes:
       - ./data:/app/data
+    environment:
+      # cloudflare, forwarded_for, real_ip, socket
+      - IP_SOURCE=cloudflare
     depends_on:
       geoipupdate:
         condition: service_healthy

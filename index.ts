@@ -33,9 +33,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 		return;
 	}
 
-	console.log(req.headers);
-	const ip = (req.headers?.["x-forwarded-for"] ||
-		req.socket.remoteAddress) as string;
+	const ip = getIp(req.headers, req.socket);
 	const ipParsed = ipaddr.parse(ip);
 	const ipKind = ipParsed.kind();
 	let resp = `ip: ${ip}\n`;
@@ -77,6 +75,25 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 	res.write(resp);
 	res.end();
 });
+
+function getIp(
+	headers: IncomingMessage["headers"],
+	socket: IncomingMessage["socket"],
+): string {
+	const ipSource = (process.env.IP_SOURCE ?? "socket").toLowerCase();
+	const socketIp = socket.remoteAddress as string;
+
+	switch (ipSource) {
+		case "cloudflare":
+			return (headers["cf-connecting-ip"] as string) ?? socketIp;
+		case "forwarded_for":
+			return (headers["x-forwarded-for"] as string) ?? socketIp;
+		case "real_ip":
+			return (headers["x-real-ip"] as string) ?? socketIp;
+		default:
+			return socketIp;
+	}
+}
 
 function getIpData(ip: string) {
 	let city = null;
